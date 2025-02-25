@@ -1,6 +1,7 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import PropTypes from "prop-types";
+import Pagination from "./PaginationComponent";
 function ProductsComponent({
   setTempProduct,
   setIsModalOpen,
@@ -9,19 +10,22 @@ function ProductsComponent({
 }) {
   const { VITE_API_URL, VITE_API_USER } = import.meta.env;
   const [products, setProducts] = useState([]);
+
+  const [pagination, setPagination] = useState({});
   useEffect(() => {
     if (isChangeData) {
       getProducts();
     }
     setIsChangeData(false);
   }, [isChangeData]);
+
   // GET
-  const getProducts = async () => {
+  const getProducts = async (page) => {
     try {
       const res = await axios.get(
-        `${VITE_API_URL}/api/${VITE_API_USER}/admin/products`
+        `${VITE_API_URL}/api/${VITE_API_USER}/admin/products?page=${page}`
       );
-
+      setPagination(res.data.pagination);
       setProducts(res.data.products);
     } catch (e) {
       alert(e.message);
@@ -29,15 +33,18 @@ function ProductsComponent({
   };
   // DETELE
   const deleteProduct = async (id) => {
-    try {
-      await axios.delete(
-        `${VITE_API_URL}/api/${VITE_API_USER}/admin/product/${id}`
-      );
-      getProducts();
-      alert("刪除成功");
-      setIsModalOpen(false);
-    } catch (err) {
-      alert("刪除失敗:" + err.message);
+    const yes = confirm("確定要刪除商品");
+    if (yes) {
+      try {
+        await axios.delete(
+          `${VITE_API_URL}/api/${VITE_API_USER}/admin/product/${id}`
+        );
+        getProducts();
+        alert("刪除成功");
+        setIsModalOpen(false);
+      } catch (err) {
+        alert("刪除失敗:" + err.message);
+      }
     }
   };
   const openModal = (item) => {
@@ -115,6 +122,7 @@ function ProductsComponent({
           </tbody>
         </table>
       </div>
+      <Pagination pagination={pagination} getProducts={getProducts} />
     </div>
   );
 }
