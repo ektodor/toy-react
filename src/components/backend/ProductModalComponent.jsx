@@ -79,7 +79,7 @@ function ProductModalComponent({
       alert("新增成功");
       setIsModalOpen(false);
     } catch (err) {
-      alert("新增失敗:" + err.message);
+      alert("新增失敗: " + err.response.data.message);
     }
   };
   // 更新產品
@@ -102,7 +102,7 @@ function ProductModalComponent({
       alert("編輯成功");
       setIsModalOpen(false);
     } catch (err) {
-      alert("編輯失敗:" + err.message);
+      alert("編輯失敗: " + err.response.data.message);
     }
   };
   return (
