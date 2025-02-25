@@ -2,7 +2,7 @@ import { useState, useRef, useEffect } from "react";
 import PropTypes from "prop-types";
 import * as bootstrap from "bootstrap";
 import axios from "axios";
-function ProductModalCompnent({
+function ProductModalComponent({
   tempProduct,
   setTempProduct,
   isModalOpen,
@@ -329,7 +329,7 @@ function ProductModalCompnent({
   );
 }
 
-ProductModalCompnent.propTypes = {
+ProductModalComponent.propTypes = {
   tempProduct: PropTypes.shape({
     id: PropTypes.string,
     imageUrl: PropTypes.string,
@@ -350,4 +350,4 @@ ProductModalCompnent.propTypes = {
   setIsModalOpen: PropTypes.func,
 };
 
-export default ProductModalCompnent;
+export default ProductModalComponent;
