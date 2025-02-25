@@ -52,14 +52,14 @@ function Login({ setIsLogin, setIsChangeData }) {
 
   return (
     <div className="card">
-      <form>
+      <form onSubmit={(e) => login(e)}>
         <div>
           <label className="form-label" htmlFor="username">
             Username :{" "}
           </label>
           <input
             className="form-control"
-            type="text"
+            type="email"
             name="username"
             id="username"
             onChange={(e) => changeUser(e)}
@@ -85,11 +85,7 @@ function Login({ setIsLogin, setIsChangeData }) {
               >
                 確認登入狀況
               </button> */}
-          <button
-            type="submit"
-            className="btn btn-primary "
-            onClick={(e) => login(e)}
-          >
+          <button type="submit" className="btn btn-primary ">
             登入
           </button>
         </div>
