@@ -1,7 +1,7 @@
 import { useForm } from "react-hook-form";
 import axios from "axios";
 import PropTypes from "prop-types";
-import { useEffect, useRef } from "react";
+import { useRef } from "react";
 function OrderComponent({ setLoading, setNeedGetCart }) {
   const { VITE_API_URL, VITE_API_USER } = import.meta.env;
   // form
