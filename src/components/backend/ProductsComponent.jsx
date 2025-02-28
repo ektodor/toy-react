@@ -14,7 +14,7 @@ function ProductsComponent({
   const [pagination, setPagination] = useState({});
   useEffect(() => {
     if (isChangeData) {
-      getProducts();
+      getProducts(1);
     }
     setIsChangeData(false);
   }, [isChangeData]);

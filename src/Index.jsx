@@ -1,115 +1,57 @@
-import { useEffect, useState } from "react";
-import axios from "axios";
+import { useState } from "react";
+
 import ProductsComponent from "./components/frontend/ProductsCompnent";
+import { SyncLoader } from "react-spinners";
+import CartComponent from "./components/frontend/CartComponent";
+import OrderComponent from "./components/frontend/OrderComponent";
+
 function Index() {
-  const { VITE_API_URL, VITE_API_USER } = import.meta.env;
+  // 加入購物車的商品 id
+  const [productId, setProductId] = useState("");
+  // 送出訂單後更新購物車
+  const [needGetCart, setNeedGetCart] = useState(true);
+  // Loading
+  const [loading, setLoading] = useState(false);
+  const override = {
+    position: "fixed",
+    top: 0,
+    left: 0,
+    bottom: 0,
+    right: 0,
+    display: "flex",
+    justifyContent: "center",
+    backgroundColor: "rgba(255,255,255,0.5)",
+    alignItems: "center",
+    zIndex: 9999, // 確保遮罩層在最上層
+    // pointerEvents: "all", // 使得所有點擊事件都被遮罩層攔截
+  };
+
   return (
     <div id="app">
+      <SyncLoader
+        color="#7de67d"
+        cssOverride={override}
+        loading={loading}
+        size={15}
+        aria-label="Loading Spinner"
+        data-testid="loader"
+      />
       <div className="container">
+        <ProductsComponent setProductId={setProductId} />
         <div className="mt-4">
-          <ProductsComponent />
-          <div className="text-end">
-            <button className="btn btn-outline-danger" type="button">
-              清空購物車
-            </button>
-          </div>
-          <table className="table align-middle">
-            <thead>
-              <tr>
-                <th></th>
-                <th>品名</th>
-                <th style={{ width: "150px" }}>數量/單位</th>
-                <th>單價</th>
-              </tr>
-            </thead>
-            <tbody>{/* Cart rows here */}</tbody>
-            <tfoot>
-              <tr>
-                <td colSpan="3" className="text-end">
-                  總計
-                </td>
-                <td className="text-end"></td>
-              </tr>
-              <tr>
-                <td colSpan="3" className="text-end text-success">
-                  折扣價
-                </td>
-                <td className="text-end text-success"></td>
-              </tr>
-            </tfoot>
-          </table>
+          <CartComponent
+            productId={productId}
+            needGetCart={needGetCart}
+            setProductId={setProductId}
+            setNeedGetCart={setNeedGetCart}
+            setLoading={setLoading}
+          />
         </div>
         <div className="my-5 row justify-content-center">
-          <form className="col-md-6">
-            <div className="mb-3">
-              <label htmlFor="email" className="form-label">
-                Email
-              </label>
-              <input
-                id="email"
-                name="email"
-                type="email"
-                className="form-control"
-                placeholder="請輸入 Email"
-              />
-            </div>
-
-            <div className="mb-3">
-              <label htmlFor="name" className="form-label">
-                收件人姓名
-              </label>
-              <input
-                id="name"
-                name="姓名"
-                type="text"
-                className="form-control"
-                placeholder="請輸入姓名"
-              />
-            </div>
-
-            <div className="mb-3">
-              <label htmlFor="tel" className="form-label">
-                收件人電話
-              </label>
-              <input
-                id="tel"
-                name="電話"
-                type="text"
-                className="form-control"
-                placeholder="請輸入電話"
-              />
-            </div>
-
-            <div className="mb-3">
-              <label htmlFor="address" className="form-label">
-                收件人地址
-              </label>
-              <input
-                id="address"
-                name="地址"
-                type="text"
-                className="form-control"
-                placeholder="請輸入地址"
-              />
-            </div>
-
-            <div className="mb-3">
-              <label htmlFor="message" className="form-label">
-                留言
-              </label>
-              <textarea
-                id="message"
-                className="form-control"
-                cols="30"
-                rows="10"
-              ></textarea>
-            </div>
-            <div className="text-end">
-              <button type="submit" className="btn btn-danger">
-                送出訂單
-              </button>
-            </div>
-          </form>
+          <OrderComponent
+            setLoading={setLoading}
+            setNeedGetCart={setNeedGetCart}
+          />
         </div>
       </div>
     </div>

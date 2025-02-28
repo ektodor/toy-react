@@ -1,27 +1,28 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
-
+import PropTypes from "prop-types";
 import ProductModalComponent from "./ProductModalComponent";
-function ProductsComponent() {
+import Pagination from "../PaginationComponent";
+function ProductsComponent({ setProductId }) {
   const { VITE_API_URL, VITE_API_USER } = import.meta.env;
   // 取得商品
   const [products, setProducts] = useState([]);
-  const [page, setPage] = useState(1);
   const [pagination, setPagination] = useState({});
   useEffect(() => {
-    (async function () {
-      try {
-        const res = await axios.get(
-          `${VITE_API_URL}/api/${VITE_API_USER}/products?page=${page}`
-        );
-        setProducts(res.data.products);
-        setPagination(res.data.pagination);
-      } catch (err) {
-        console.log(err.message);
-        alert("取得資料失敗");
-      }
-    })();
-  }, [page]);
+    getProducts(1);
+  }, []);
+  // GET
+  const getProducts = async (page) => {
+    try {
+      const res = await axios.get(
+        `${VITE_API_URL}/api/${VITE_API_USER}/products?page=${page}`
+      );
+      setPagination(res.data.pagination);
+      setProducts(res.data.products);
+    } catch (e) {
+      alert(e.message);
+    }
+  };
   // modal
   const [modalStatus, setModalStatus] = useState(false);
   const [tempProduct, setTempProduct] = useState({
@@ -46,6 +47,7 @@ function ProductsComponent() {
         setTempProduct={setTempProduct}
         modalStatus={modalStatus}
         setModalStatus={setModalStatus}
+        setProductId={setProductId}
       />
       {/* 產品Modal */}
       <table className="table align-middle">
@@ -85,13 +87,16 @@ function ProductsComponent() {
                       onClick={() => {
                         setTempProduct({ ...item });
                         setModalStatus(true);
-                        console.log(modalStatus);
                       }}
                     >
                       <i className="fas fa-spinner fa-pulse"></i>
                       查看更多
                     </button>
-                    <button type="button" className="btn btn-outline-danger">
+                    <button
+                      type="button"
+                      className="btn btn-outline-danger"
+                      onClick={() => setProductId(item.id)}
+                    >
                       <i className="fas fa-spinner fa-pulse"></i>
                       加到購物車
                     </button>
@@ -102,28 +107,11 @@ function ProductsComponent() {
           })}
         </tbody>
       </table>
-      <nav aria-label="Page navigation">
-        <ul className="pagination">
-          <li className="page-item">
-            <a className="page-link" href="#" aria-label="Previous">
-              <span aria-hidden="true">&laquo;</span>
-            </a>
-          </li>
-
-          <li className="page-item">
-            <a className="page-link" href="#">
-              1
-            </a>
-          </li>
-          <li className="page-item">
-            <a className="page-link" href="#" aria-label="Next">
-              <span aria-hidden="true">&raquo;</span>
-            </a>
-          </li>
-        </ul>
-      </nav>
+      <Pagination pagination={pagination} getProducts={getProducts} />
     </>
   );
 }
-
+ProductsComponent.propTypes = {
+  setProductId: PropTypes.func,
+};
 export default ProductsComponent;

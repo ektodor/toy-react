@@ -6,6 +6,7 @@ function ProductModalComponent({
   setTempProduct,
   modalStatus,
   setModalStatus,
+  setProductId,
 }) {
   const modalRef = useRef(null);
   useEffect(() => {
@@ -99,10 +100,17 @@ function ProductModalComponent({
               className="btn btn-secondary"
               onClick={closeModal}
             >
-              Close
+              關閉
             </button>
-            <button type="button" className="btn btn-primary">
-              Save changes
+            <button
+              type="button"
+              className="btn btn-primary"
+              onClick={() => {
+                closeModal();
+                setProductId(tempProduct.id);
+              }}
+            >
+              加入購物車
             </button>
           </div>
         </div>
@@ -128,6 +136,7 @@ ProductModalComponent.propTypes = {
   setTempProduct: PropTypes.func,
   modalStatus: PropTypes.bool,
   setModalStatus: PropTypes.func,
+  setProductId: PropTypes.func,
 };
 
 export default ProductModalComponent;
