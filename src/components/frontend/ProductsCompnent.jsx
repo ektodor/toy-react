@@ -3,8 +3,9 @@ import axios from "axios";
 import PropTypes from "prop-types";
 import ProductModalComponent from "./ProductModalComponent";
 import Pagination from "../PaginationComponent";
+import { Link } from "react-router";
+const { VITE_API_URL, VITE_API_USER } = import.meta.env;
 function ProductsComponent({ setProductId }) {
-  const { VITE_API_URL, VITE_API_USER } = import.meta.env;
   // 取得商品
   const [products, setProducts] = useState([]);
   const [pagination, setPagination] = useState({});
@@ -38,7 +39,20 @@ function ProductsComponent({ setProductId }) {
     is_enabled: false,
     imagesUrl: [],
   });
-
+  // 購物車
+  async function addProductToCart(productId) {
+    try {
+      await axios.post(`${VITE_API_URL}/api/${VITE_API_USER}/cart`, {
+        data: {
+          product_id: productId,
+          qty: 1,
+        },
+      });
+      alert("新增成功");
+    } catch (err) {
+      alert(`新增購物車商品失敗 : ${err.response.data.message}`);
+    }
+  }
   return (
     <>
       {/* 產品Modal */}
@@ -81,7 +95,7 @@ function ProductsComponent({ setProductId }) {
                 </td>
                 <td>
                   <div className="btn-group btn-group-sm">
-                    <button
+                    {/* <button
                       type="button"
                       className="btn btn-outline-secondary"
                       onClick={() => {
@@ -91,11 +105,17 @@ function ProductsComponent({ setProductId }) {
                     >
                       <i className="fas fa-spinner fa-pulse"></i>
                       查看更多
-                    </button>
+                    </button> */}
+                    <Link
+                      className="btn btn-outline-secondary"
+                      to={`/products/${item.id}`}
+                    >
+                      查看更多
+                    </Link>
                     <button
                       type="button"
                       className="btn btn-outline-danger"
-                      onClick={() => setProductId(item.id)}
+                      onClick={() => addProductToCart(item.id)}
                     >
                       <i className="fas fa-spinner fa-pulse"></i>
                       加到購物車
